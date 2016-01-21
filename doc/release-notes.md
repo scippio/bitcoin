@@ -4,38 +4,11 @@ release-notes at release time)
 Notable changes
 ===============
 
-Random-cookie RPC authentication
----------------------------------
+Example item
+----------------
 
-When no `-rpcpassword` is specified, the daemon now uses a special 'cookie'
-file for authentication. This file is generated with random content when the
-daemon starts, and deleted when it exits. Its contents are used as
-authentication token. Read access to this file controls who can access through
-RPC. By default it is stored in the data directory but its location can be
-overridden with the option `-rpccookiefile`.
 
-This is similar to Tor's CookieAuthentication: see
-https://www.torproject.org/docs/tor-manual.html.en
-
-This allows running bitcoind without having to do any manual configuration.
-
-Low-level RPC API changes
---------------------------
-
-- Monetary amounts can be provided as strings. This means that for example the
-  argument to sendtoaddress can be "0.0001" instead of 0.0001. This can be an
-  advantage if a JSON library insists on using a lossy floating point type for
-  numbers, which would be dangerous for monetary amounts.
-
-Option parsing behavior
------------------------
-
-Command line options are now parsed strictly in the order in which they are
-specified. It used to be the case that `-X -noX` ends up, unintuitively, with X
-set, as `-X` had precedence over `-noX`. This is no longer the case. Like for
-other software, the last specified value for an option will hold.
-
-0.12.0 Change log
+0.13.0 Change log
 =================
 
 Detailed release notes follow. This overview includes changes that affect
@@ -44,6 +17,20 @@ the code changes and accompanying discussion, both the pull request and
 git merge commit are mentioned.
 
 ### RPC and REST
+
+Asm script outputs now contain OP_CHECKLOCKTIMEVERIFY in place of OP_NOP2
+-------------------------------------------------------------------------
+
+OP_NOP2 has been renamed to OP_CHECKLOCKTIMEVERIFY by [BIP 
+65](https://github.com/bitcoin/bips/blob/master/bip-0065.mediawiki)
+
+The following outputs are affected by this change:
+- RPC `getrawtransaction` (in verbose mode)
+- RPC `decoderawtransaction`
+- RPC `decodescript`
+- REST `/rest/tx/` (JSON format)
+- REST `/rest/block/` (JSON format when including extended tx details)
+- `bitcoin-tx -json`
 
 ### Configuration and command-line options
 
@@ -62,6 +49,4 @@ git merge commit are mentioned.
 ### Tests
 
 ### Miscellaneous
-
-- Removed bitrpc.py from contrib
 
